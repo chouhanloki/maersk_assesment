@@ -1,4 +1,4 @@
 class Strings{
   static const feedPageTitle="Feed";
-  static const postPageTitle="Post";
+  static const postPageTitle="New Post";
 }
