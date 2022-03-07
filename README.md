@@ -16,4 +16,4 @@ For now user cannot upload image from gallery instead flutter logo is displayed.
 
 On save clicked New Title and new description is displayed in Feed page.
 
-![Feed Page](post_page.png)
+![Post Page](post_page.png)
