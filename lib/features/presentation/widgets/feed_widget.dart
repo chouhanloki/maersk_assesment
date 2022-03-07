@@ -19,6 +19,7 @@ class _FeedWidgetState extends State<FeedWidget> {
   TextEditingController? searchController;
   ButtonLikeBloc? buttonLikeBloc;
   FavouriteLikeBloc? favouriteLikeBloc;
+  DisplayFeedListBloc? displayFeedListBloc;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _FeedWidgetState extends State<FeedWidget> {
     // TODO: implement build
     buttonLikeBloc = BlocProvider.of<ButtonLikeBloc>(context);
     favouriteLikeBloc = BlocProvider.of<FavouriteLikeBloc>(context);
+    displayFeedListBloc = BlocProvider.of<DisplayFeedListBloc>(context);
     return Column(
       children: [
         Padding(
@@ -44,7 +46,10 @@ class _FeedWidgetState extends State<FeedWidget> {
                     borderRadius: BorderRadius.all(
                       Radius.circular(10.0),
                     ),
-                  ))),
+                  )),
+          onChanged: (value){
+                displayFeedListBloc?.add(FilterEvent(value));
+          }),
         ),
         bottomListView(context)
       ],
@@ -67,14 +72,14 @@ class _FeedWidgetState extends State<FeedWidget> {
                   child: Card(
                     elevation: 2,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           feedDataModelList[index].title!,
                           style: const TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 20),
+                              fontSize: 30),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -83,14 +88,14 @@ class _FeedWidgetState extends State<FeedWidget> {
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.normal,
-                                fontSize: 10),
+                                fontSize: 20),
                           ),
                         ),
                         Center(
                           child: Image.asset(
                             feedDataModelList[index].imagePath!,
                             height: 40,
-                            width: 20,
+                            width: 40,
                           ),
                         ),
                         Row(

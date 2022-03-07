@@ -23,7 +23,7 @@ class DisplayFeedListBloc extends Bloc<BaseEvent, BaseState> {
     } else if (event is FilterEvent) {
       StateOnSuccess stateOnSuccess = state as StateOnSuccess;
       SearchFeedDataModel searchFeedDataModel = stateOnSuccess.response;
-      if (event.filterText == "") {
+      if (event.filterText!.isEmpty) {
         searchFeedDataModel.filterActualList?.clear();
         searchFeedDataModel.filterActualList
             ?.addAll(searchFeedDataModel.actualList!);
@@ -74,4 +74,5 @@ class DisplayFeedListBloc extends Bloc<BaseEvent, BaseState> {
 
 class FilterEvent extends BaseEvent {
   String? filterText;
+  FilterEvent(this.filterText);
 }
