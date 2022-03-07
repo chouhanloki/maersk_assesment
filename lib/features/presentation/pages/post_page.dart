@@ -1,5 +1,6 @@
 import 'package:assesment/core/utils/Strings.dart';
 import 'package:assesment/features/presentation/widgets/feed_widget.dart';
+import 'package:assesment/features/presentation/widgets/post_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class PostPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(Strings.postPageTitle),
       ),
-      body: FeedWidget(),
+      body: PostWidget(),
     );
   }
 }

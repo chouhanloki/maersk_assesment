@@ -1,7 +1,11 @@
 import 'package:assesment/core/routes/routes.dart';
 import 'package:flutter/material.dart';
-
-void main() {
+import 'package:assesment/core/injection_container/feed_injection_container.dart' as fIC;
+import 'package:assesment/core/injection_container/post_injection_container.dart' as pIC;
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await fIC.init();
+  await pIC.init();
   runApp(const MyApp());
 }
 

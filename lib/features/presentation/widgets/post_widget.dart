@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 
-class FeedWidget extends StatelessWidget{
+class PostWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    throw UnimplementedError();
+    return const Center(child: Text("Post page"));
   }
 }
