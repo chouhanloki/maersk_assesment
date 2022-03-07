@@ -1,11 +1,14 @@
-import 'package:assesment/core/routes/routes.dart';
-import 'package:flutter/material.dart';
+import 'package:assesment/base/base_bloc.dart';
 import 'package:assesment/core/injection_container/feed_injection_container.dart' as fIC;
 import 'package:assesment/core/injection_container/post_injection_container.dart' as pIC;
+import 'package:assesment/core/routes/routes.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await fIC.init();
   await pIC.init();
+  Bloc.observer=BaseBloc();
   runApp(const MyApp());
 }
 

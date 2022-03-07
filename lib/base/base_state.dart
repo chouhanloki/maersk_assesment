@@ -11,3 +11,7 @@ class StateOnFailure<T> extends BaseState{
   T failure;
   StateOnFailure(this.failure);
 }
+
+class StateInitialFeed extends BaseState{
+
+}

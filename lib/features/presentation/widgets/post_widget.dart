@@ -1,3 +1,5 @@
+import 'package:assesment/core/utils/image_path.dart';
+import 'package:assesment/features/domain/entities/feed_data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +61,11 @@ class _PostWidgetState extends State<PostWidget> {
                       ),
                     ))),
           ),
+             ElevatedButton(onPressed:(){
 
+               Navigator.pop(context,FeedDataModel(title:newTitleController!.text,description: newDescriptionController!.text,
+                   imagePath: ImagePath.flutterLogo,thumbsUp: false,likesCount: 0));
+             }, child: Text("Save"))
         ],
       ),
     );

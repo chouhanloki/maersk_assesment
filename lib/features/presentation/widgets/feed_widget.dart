@@ -1,6 +1,14 @@
+import 'package:assesment/base/base_event.dart';
+import 'package:assesment/base/base_state.dart';
 import 'package:assesment/core/utils/image_path.dart';
+import 'package:assesment/features/domain/entities/feed_data_model.dart';
+import 'package:assesment/features/domain/entities/search_feed_data_model.dart';
+import 'package:assesment/features/presentation/bloc/button_like_bloc.dart';
+import 'package:assesment/features/presentation/bloc/display_feed_list_bloc.dart';
+import 'package:assesment/features/presentation/bloc/favourite_like_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FeedWidget extends StatefulWidget {
   @override
@@ -9,6 +17,8 @@ class FeedWidget extends StatefulWidget {
 
 class _FeedWidgetState extends State<FeedWidget> {
   TextEditingController? searchController;
+  ButtonLikeBloc? buttonLikeBloc;
+  FavouriteLikeBloc? favouriteLikeBloc;
 
   @override
   void initState() {
@@ -20,82 +30,106 @@ class _FeedWidgetState extends State<FeedWidget> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-                controller: searchController,
-                decoration: const InputDecoration(
-                    hintText: 'Search',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
-                      ),
-                    ))),
-          ),
-          bottomListView(context)
-        ],
-      ),
+    buttonLikeBloc = BlocProvider.of<ButtonLikeBloc>(context);
+    favouriteLikeBloc = BlocProvider.of<FavouriteLikeBloc>(context);
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+              controller: searchController,
+              decoration: const InputDecoration(
+                  hintText: 'Search',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ))),
+        ),
+        bottomListView(context)
+      ],
     );
   }
 
   Widget bottomListView(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              elevation: 2,
-              child: Column(
-                children: [
-                  const Text(
-                    "Title",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
-                  const Text(
-                    "Description",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 10),
-                  ),
-                  Image.asset(
-                    ImagePath.flutterLogo,
-                    height: 20,
-                    width: 20,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Flexible(
-                          child: ElevatedButton(
-                        onPressed: () {},
-                        child: const Icon(Icons.thumb_up_sharp,
-                            color: Colors.white),
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
+    return BlocBuilder<DisplayFeedListBloc, BaseState>(
+      builder: (context, state) {
+        if (state is StateOnSuccess) {
+          SearchFeedDataModel searchFeedDataModel = state.response;
+          List<FeedDataModel> feedDataModelList =
+              searchFeedDataModel.filterActualList!;
+          return ListView.builder(
+              shrinkWrap: true,
+              itemCount: feedDataModelList.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    elevation: 2,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          feedDataModelList[index].title!,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
                         ),
-                      )),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Icon(Icons.favorite, color: Colors.white),
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            feedDataModelList[index].description!,
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.normal,
+                                fontSize: 10),
+                          ),
                         ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        });
+                        Center(
+                          child: Image.asset(
+                            feedDataModelList[index].imagePath!,
+                            height: 40,
+                            width: 20,
+                          ),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Flexible(
+                                child: ElevatedButton(
+                              onPressed: () {
+                                buttonLikeBloc?.add(EventRequest(
+                                    feedDataModelList[index].likesCount));
+                              },
+                              child: const Icon(Icons.thumb_up_sharp,
+                                  color: Colors.white),
+                              style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                              ),
+                            )),
+                            ElevatedButton(
+                              onPressed: () {
+                                favouriteLikeBloc?.add(EventRequest(
+                                    feedDataModelList[index].thumbsUp));
+                              },
+                              child: const Icon(Icons.favorite,
+                                  color: Colors.white),
+                              style: ElevatedButton.styleFrom(
+                                shape: CircleBorder(),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              });
+        } else {
+          return const Text("No Feed to display");
+        }
+      },
+    );
   }
 }
